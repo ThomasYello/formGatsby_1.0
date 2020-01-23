@@ -8,7 +8,7 @@ import Layout from "../components/layout"
 
 import SEO from "../components/seo"
 
-import firebaseconf from './config'
+import firebaseconf from '../compenents/config'
 
 class inscription extends React.Component {
 

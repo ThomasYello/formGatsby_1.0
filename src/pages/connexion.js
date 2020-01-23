@@ -1,6 +1,6 @@
 import React from "react"
 import { Link } from "gatsby"
-import firebaseconf from "./config"
+import firebaseconf from "../components/config"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 
