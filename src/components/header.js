@@ -32,8 +32,8 @@ const Header = ({ siteTitle }) => (
          
           <Link to="/">Home</Link>
           <Link to="/listeutilisateur">Listes des utilisateurs</Link>
-          <Link to="/connexion">Connexion</Link>
-          <Link to="/inscription">Inscription</Link>
+          <Link to="/formLogin">Connexion</Link>
+          <Link to="/formRegister">Inscription</Link>
         
         </div>
   </header>

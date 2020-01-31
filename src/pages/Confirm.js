@@ -1,84 +1,49 @@
 import React from "react"
-import { Link } from "gatsby"
 
 import Layout from "../components/layout"
+
 import SEO from "../components/seo"
 
-
-
-
 class Confirm extends React.Component {
-
+  constructor(props) {
+    super(props)
+    this.state = { loading: false}
+  }
   
-  constructor (props){
-    super(props);
-    
-    this.state = {
-      form: [],
-      nom: "",
-      prenom: "",
-      email: ""
-    }
-    
+  componentDidMount() {
+    this.setState({ loading: true }, () => {
+      this.userFetch()
+    })
   }
 
-  componentDidMount(){
-
+  userFetch = () => {
     this.setState({
       nom: this.props.location.state.nom,
       prenom: this.props.location.state.prenom,
       email: this.props.location.state.email,
-      form: this.props.location.state.form
+      loading: false,
     })
   }
-  
- 
-  render(){
 
-    const form = this.props.location.state.form
-    
-    console.log(form)
-    
-    
- const liste =  Object.keys(form).map( i => (
-      <ul className="travelcompany-input" key={i} >
-        <br />
-          <li><span key={i}> Name: {form[i].nom}</span></li>
-          <li><span key={i}> Prenom: {form[i].prenom}</span></li>
-          <li><span key={i}> Email: {form[i].email}</span></li>
-          
-      </ul>
-  ))
+  render() {
+    const { nom, prenom, email } = this.state
 
-   const {nom, prenom, email} = this.state
-    return(
-    
-  <Layout>
-    <SEO title="Confirmation Formulaire" />
-    <div className="conf">
-    <center >
-    
-    <h1>Terminé avec succès ! </h1>
+    if (!this.state.loading) {
+      return (
+        <Layout>
+          <SEO title="Merci !" />
 
-      <b> Vos données :</b>
+          <h1>
+            Merci pour votre participation {nom} {prenom}
+          </h1>
 
-      
-        
-        <p>votre nom est {nom} </p>
-
-        <p>votre prenom est {prenom}</p>
-
-        <p>votre email est {email} </p>
-
-      </center>
-
-      
-
-    </div>
-    
-
-  </Layout>
-)
+          <p> Un mail vous a été envoyé à : {email} !</p>
+        </Layout>
+      )
+    } else {
+      return <h2>Loading</h2>
+    }
+  }
 }
-}
+
 export default Confirm

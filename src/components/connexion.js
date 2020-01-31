@@ -1,11 +1,10 @@
 import React from "react"
-import { Link } from "gatsby"
-import firebaseconf from "../components/config"
-import Layout from "../components/layout"
-import SEO from "../components/seo"
+import { Link, navigate } from "gatsby"
+import firebaseconf from "./config"
 
 
-class connexion extends React.Component{
+
+class Connexion extends React.Component{
 
     constructor(props){
         super(props)
@@ -16,25 +15,26 @@ class connexion extends React.Component{
             email: "",
             nom: "",
             prenom: "",
+            fireErrors: ''
         }
 
 
     }
 
-    componentDidMount() {
-        let formRef = firebaseconf.database().ref('utilisateurs');
-        formRef.on('child_added', snapshot => {
-          const { nom, prenom, email } = snapshot.val();
-          const data = { nom, prenom, email };
-          this.setState({ form: [data].concat(this.state.form) });
-
-        })
-      }
     
 
-    handleSubmit = event =>{
-
+    handleSubmit = event => {
         event.preventDefault();
+
+        firebaseconf.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+        
+        .catch((error) => {
+
+            this.setState({fireErrors: error.message})
+
+        });
+
+        navigate("/" )
 
     }
 
@@ -49,18 +49,21 @@ class connexion extends React.Component{
 
     render(){
 
+        let errorNotification = this.state.fireErrors ? 
+            ( <div className="Error"> {this.state.fireErrors} </div> ) : null;
+
         const { email, password} = this.state
 
         return(
 
-            <Layout>
+            <>
 
-             <SEO title="Formulaire" />
+
 
                 
             <div className="wrapper">
                 <h1>Connexion</h1>
-                 
+                
                 <div className="from-wrapper">
                     <form onSubmit={this.handleSubmit} >
                         
@@ -81,7 +84,7 @@ class connexion extends React.Component{
                         <button onSubmit={this.handleSubmit}> Valider </button>
                         </div>
 
-                
+                     {errorNotification}
                     </form>
 
           
@@ -89,10 +92,10 @@ class connexion extends React.Component{
 
             </div>
 
-            </Layout>
+            </>
 
         );
     }
 }
 
-export default connexion;
+export default Connexion;

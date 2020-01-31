@@ -4,13 +4,11 @@ import React from "react"
 import { Link, navigate } from "gatsby"
 
 
-import Layout from "../components/layout"
 
-import SEO from "../components/seo"
 
-import firebaseconf from '../compenents/config'
+import firebaseconf from '../components/config'
 
-class inscription extends React.Component {
+class Inscription extends React.Component {
 
   constructor(props) {
     super(props)
@@ -41,41 +39,42 @@ class inscription extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-      
-    const params = {
-      nom: this.state.nom,
-      prenom: this.state.prenom,
-      email: this.state.email,
-      checked: this.state.checked,
-      password: this.state.password
+    if (this.state.checked === true){
 
+    firebaseconf.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then(() => {
 
-    };
-    if (params.checked === true) {
-      if (params.nom && params.email && params.prenom && params.password) {
-        firebaseconf.database().ref('utilisateurs').push(params).then(() => {
+            const params = {
+                nom: this.state.nom,
+                prenom: this.state.prenom,
+                email: this.state.email,
+                password: this.state.password,
           
-        }).catch((error) => {
+          
+              };
 
-          alert(error);
-        });
+            
 
-      }
+            firebaseconf.database().ref('utilisateurs').push(params)
+              
 
+           })
+          
+           const {nom, prenom, email, form, password} = this.state
+              
+            navigate("/Confirm",
+              {
+                state: { nom, prenom, email, form, password }
 
-      const { nom, prenom, email, form, password } = this.state;
+              })
+           
+              
+            } else {
 
-      navigate("/Confirm",
-        {
-          state: { nom, prenom, email, form, password }
+              alert('Vous devez cocher nos conditions pour vous inscrire !')
+            }
+          }
 
-        })
-
-    } else {
-      alert('veuillez accepter les conditions pour vous inscrire');
-    }
-
-  }
 
   handleChange = event => {
     event.preventDefault();
@@ -104,8 +103,7 @@ class inscription extends React.Component {
 
     return (
 
-      <Layout>
-        <SEO title="Formulaire" />
+      <>
         
 
         
@@ -165,10 +163,10 @@ class inscription extends React.Component {
 
 
         </div>
-      </Layout>
+      </>
 
     )
   }
 }
 
-export default inscription
+export default Inscription
